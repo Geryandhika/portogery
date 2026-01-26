@@ -1,5 +1,6 @@
-name: CI Tests
+name: CI Tests (Windows)
 
+# Trigger workflow saat push atau PR ke main
 on:
   push:
     branches:
@@ -17,7 +18,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # 2. Setup JDK (sesuaikan versi project)
+      # 2. Setup JDK (sesuaikan versi project kamu, misal Java 17)
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
@@ -28,7 +29,7 @@ jobs:
       - name: Build project
         run: gradlew.bat clean build
 
-      # 4. Upload test results (opsional)
+      # 4. (Opsional) Upload hasil test
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v3
