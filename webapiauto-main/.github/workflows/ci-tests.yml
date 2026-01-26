@@ -1,25 +1,12 @@
-name: Debug Gradlew
-
+name: Cucumber Tests
 on:
-  workflow_dispatch:
   push:
-    branches: [ main ]
-
+    branches:
+      - main
 jobs:
-  debug:
+  test:
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Where am I
-        run: |
-          pwd
-          ls -la
-
-      - name: Find gradlew
-        run: |
-          find . -name "gradlew*"
-
-      - name: Try chmod
-        run: chmod +x gradlew
+      - uses: actions/checkout@v3
+      - name: Run Cucumber
+        run: ./gradlew test
