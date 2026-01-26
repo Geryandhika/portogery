@@ -4,10 +4,10 @@ name: CI Tests (Windows)
 on:
   push:
     branches:
-      - main
+      webapiauto-main
   pull_request:
     branches:
-      - main
+      webapiauto-main
 
 jobs:
   build:
