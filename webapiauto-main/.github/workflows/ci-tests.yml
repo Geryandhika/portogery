@@ -1,13 +1,46 @@
-name: Test Actions
+name: Web & API Cucumber Tests
 
 on:
-  workflow_dispatch
-  push:
-    branches: [ main ]
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+      - master
 
 jobs:
-  test:
+  build-and-test:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - run: echo "GitHub Actions BERHASIL jalan 🚀"
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+        working-directory: webapiauto-main
+
+      - name: Run API tests
+        run: ./gradlew apiTest
+        working-directory: webapiauto-main
+
+      - name: Run Web tests (headless)
+        env:
+          CI: true
+        run: ./gradlew webTest
+        working-directory: webapiauto-main
+
+      - name: Upload Cucumber reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: cucumber-reports
+          path: |
+            webapiauto-main/app/build/reports/cucumber-api.html
+            webapiauto-main/app/build/reports/cucumber-api.json
+            webapiauto-main/app/build/reports/cucumber-web.html
+            webapiauto-main/app/build/reports/cucumber-web.json
