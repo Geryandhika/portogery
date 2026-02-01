@@ -1,6 +1,5 @@
-name: CI Tests (Windows)
+name: CI Tests (Windows/Linux)
 
-# Trigger workflow saat push atau PR ke main
 on:
   push:
     branches:
@@ -10,29 +9,27 @@ on:
       - main
 
 jobs:
-  build:
-    runs-on: windows-latest
-
+  web-tests:
+    runs-on: ubuntu-latest # bisa juga windows-latest
     steps:
-      # 1. Checkout kode
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # 2. Setup JDK (sesuaikan versi project kamu, misal Java 17)
-      - name: Set up JDK 17
+      - name: Set up JDK
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
 
-      # 3. Jalankan Gradle build via gradlew.bat
       - name: Build project
-        run: gradlew.bat clean build
+        run: ./gradlew clean build
 
-      # 4. (Opsional) Upload hasil test
+      - name: Run Web Tests
+        run: ./gradlew webTest
+
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v3
         with:
           name: test-results
-          path: app\build\test-results
+          path: app/build/test-results
